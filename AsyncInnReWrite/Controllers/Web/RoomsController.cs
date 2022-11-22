@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AsyncInnReWrite.Models;
 using Hotel.Data;
+using AsyncInnReWrite.Models.DTO;
 
 namespace AsyncInnReWrite.Controllers.Web
 {
@@ -22,7 +23,9 @@ namespace AsyncInnReWrite.Controllers.Web
         // GET: Rooms
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Rooms.ToListAsync());
+            //return View(await _context.Rooms.ToListAsync());
+            return View(await _context.Rooms.Include(r => r.Amenities).ThenInclude(s => s.roomAmenities).ToListAsync());
+            
         }
 
         // GET: Rooms/Details/5
@@ -33,14 +36,18 @@ namespace AsyncInnReWrite.Controllers.Web
                 return NotFound();
             }
 
-            var room = await _context.Rooms
+            var room = await _context.Rooms.Include(r => r.Amenities)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (room == null)
             {
                 return NotFound();
             }
 
-            return View(room);
+            RoomDTO roomDTO = new RoomDTO() {
+            AmenityNRoom = "Names",
+            Amenity = room.Amenities.First() };
+            return View(roomDTO);
         }
 
         // GET: Rooms/Create

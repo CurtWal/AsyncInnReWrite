@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AsyncInnReWrite.Models;
 using Hotel.Data;
+using AsyncInnReWrite.Models.Service;
+using AsyncInnReWrite.Models.Interface;
 
 namespace AsyncInnReWrite.Controllers.Web
 {

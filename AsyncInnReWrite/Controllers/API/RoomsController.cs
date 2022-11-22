@@ -1,6 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Hotel.Data;
+using AsyncInnReWrite.Models;
+using AsyncInnReWrite.Models.Interface;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AsyncInnReWrite.Controllers.API
 {
@@ -8,36 +16,70 @@ namespace AsyncInnReWrite.Controllers.API
     [ApiController]
     public class RoomsController : ControllerBase
     {
-        // GET: api/<RoomsController>
+        private readonly IRoom _context;
+
+        
+        public RoomsController(IRoom c)
+        {
+            _context = c;
+        }
+
+        // GET: api/Rooms
         [HttpGet]
-        public IEnumerable<string> Get()
+        
+        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
-            return new string[] { "value1", "value2" };
+            // You should count the list ...
+            var list = await _context.GetRooms();
+            return Ok(list);
         }
 
-        // GET api/<RoomsController>/5
+        // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        
+        public async Task<ActionResult<Room>> GetRoom(int id)
         {
-            return "value";
+            Room room = await _context.GetRoom(id);
+            return room;
         }
 
-        // POST api/<RoomsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<RoomsController>/5
+        // PUT: api/Rooms/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        
+
+        public async Task<IActionResult> Create(int id, Room room)
         {
+            if (id != room.Id)
+            {
+                return BadRequest();
+            }
+
+            var updatedRoom = await _context.UpdateRoom(id, room);
+
+            return Ok(updatedRoom);
         }
 
-        // DELETE api/<RoomsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // POST: api/Rooms
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        
+        public async Task<ActionResult<Room>> UpdateRoom(Room room)
         {
+            await _context.Create(room);
+
+            // Return a 201 Header to browser
+            // The body of the request will be us running GetTechnology(id);
+            return CreatedAtAction("GetRoom", new { id = room.Id }, room);
+        }
+
+        // DELETE: api/Rooms/5
+        [HttpDelete("{id}")]
+        
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _context.Delete(id);
+            return NoContent();
         }
     }
 }

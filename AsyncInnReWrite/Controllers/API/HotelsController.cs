@@ -1,6 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Hotel.Data;
+using AsyncInnReWrite.Models;
+using AsyncInnReWrite.Models.Interface;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AsyncInnReWrite.Controllers.API
 {
@@ -8,36 +16,68 @@ namespace AsyncInnReWrite.Controllers.API
     [ApiController]
     public class HotelsController : ControllerBase
     {
-        // GET: api/<HotelsController>
+        private readonly IHotel _context;
+        
+        public HotelsController(IHotel c)
+        {
+            _context = c;
+        }
+
+        // GET: api/Hotels
         [HttpGet]
-        public IEnumerable<string> Get()
+        
+        public async Task<ActionResult<IEnumerable<Hotels>>> GetHotels()
         {
-            return new string[] { "value1", "value2" };
+            // You should count the list ...
+            var list = await _context.GetHotels();
+            return Ok(list);
         }
 
-        // GET api/<HotelsController>/5
+        // GET: api/Hotels/5
         [HttpGet("{id}")]
-        public string Get(int id)
+       
+        public async Task<ActionResult<Hotels>> GetHotel(int id)
         {
-            return "value";
+            Hotels hotel = await _context.GetHotel(id);
+            return hotel;
         }
 
-        // POST api/<HotelsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
 
-        // PUT api/<HotelsController>/5
+        // PUT: api/Hotels/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Create(int id, Hotels hotel)
         {
+            if (id != hotel.Id)
+            {
+                return BadRequest();
+            }
+
+            var updatedHotel = await _context.UpdateHotel(id, hotel);
+
+            return Ok(updatedHotel);
         }
 
-        // DELETE api/<HotelsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // POST: api/Hotels
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Hotels>> UpdateHotel(Hotels hotel)
         {
+            await _context.Create(hotel);
+
+            // Return a 201 Header to browser
+            // The body of the request will be us running GetTechnology(id);
+            return CreatedAtAction("GetInn", new { id = hotel.Id }, hotel);
+        }
+
+
+        // DELETE: api/Hotels/5
+        [HttpDelete("{id}")]
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _context.Delete(id);
+            return NoContent();
         }
     }
 }

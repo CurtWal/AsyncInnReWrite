@@ -1,4 +1,6 @@
-﻿namespace AsyncInnReWrite.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace AsyncInnReWrite.Models
 {
     public class Room
     {

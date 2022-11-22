@@ -1,4 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Hotel.Data;
+using AsyncInnReWrite.Models;
+using AsyncInnReWrite.Models.Interface;
+
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +19,65 @@ namespace AsyncInnReWrite.Controllers.API
     [ApiController]
     public class AmenitiesController : ControllerBase
     {
-        // GET: api/<AmenitiesController>
+        private readonly IAmenity _context;
+
+        public AmenitiesController(IAmenity c)
+        {
+            _context = c;
+        }
+
+        // GET: api/Amenities
         [HttpGet]
-        public IEnumerable<string> Get()
+
+        public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities()
         {
-            return new string[] { "value1", "value2" };
+            // You should count the list ...
+            var list = await _context.GetAmenities();
+            return Ok(list);
         }
 
-        // GET api/<AmenitiesController>/5
+        // GET: api/Amenities/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Amenity>> GetAmenity(int id)
         {
-            return "value";
+            Amenity amenities = await _context.GetAmenity(id);
+            return amenities;
         }
 
-        // POST api/<AmenitiesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<AmenitiesController>/5
+        // PUT: api/Amenities/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Create(int id, Amenity amenities)
         {
+            if (id != amenities.Id)
+            {
+                return BadRequest();
+            }
+
+            var updatedAmenity = await _context.UpdateAmenity(id, amenities);
+
+            return Ok(updatedAmenity);
         }
 
-        // DELETE api/<AmenitiesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // POST: api/Amenities
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+
+        public async Task<ActionResult<Amenity>> UpdateAmenity(Amenity amenities)
         {
+            await _context.Create(amenities);
+
+            // Return a 201 Header to browser
+            // The body of the request will be us running GetTechnology(id);
+            return CreatedAtAction("GetAmenitie", new { id = amenities.Id }, amenities);
+        }
+
+        // DELETE: api/Amenities/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _context.Delete(id);
+            return NoContent();
         }
     }
 }

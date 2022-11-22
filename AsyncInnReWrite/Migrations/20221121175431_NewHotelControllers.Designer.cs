@@ -4,6 +4,7 @@ using Hotel.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AsyncInnReWrite.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221121175431_NewHotelControllers")]
+    partial class NewHotelControllers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,27 +239,7 @@ namespace AsyncInnReWrite.Migrations
 
                     b.HasIndex("RoomID");
 
-                    b.ToTable("roomAmenities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AmenitiesID = 1,
-                            RoomID = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AmenitiesID = 2,
-                            RoomID = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AmenitiesID = 3,
-                            RoomID = 3
-                        });
+                    b.ToTable("RoomAmenities");
                 });
 
             modelBuilder.Entity("AmenityRoomAmenities", b =>

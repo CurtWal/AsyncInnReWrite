@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Design;
 using Hotel.Data;
 using AsyncInnReWrite.Models;
+using AsyncInnReWrite.Models.Interface;
+using AsyncInnReWrite.Models.Service;
 
 namespace Hotel.Data
 {
@@ -14,6 +16,7 @@ namespace Hotel.Data
         public DbSet<Hotels> Hotels { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Amenity> Amenities { get; set; }
+        public DbSet<RoomAmenities> RoomAmenities { get; set; }
         public HotelDbContext(DbContextOptions options) : base(options)
         {
 
@@ -31,10 +34,14 @@ namespace Hotel.Data
             modelBuilder.Entity<Room>().HasData(new Room { Id = 1, Name = "John Snow", Layout = "The King Suite" });
             modelBuilder.Entity<Room>().HasData(new Room { Id = 2, Name = "Sara White", Layout = "The Queen Suite" });
             modelBuilder.Entity<Room>().HasData(new Room { Id = 3, Name = "Tom Fisher", Layout = "The Loud Room" });
-
+            
             modelBuilder.Entity<Amenity>().HasData(OceanView);
             modelBuilder.Entity<Amenity>().HasData(FreeWiFiInternet);
             modelBuilder.Entity<Amenity>().HasData(MiniBar);
+
+            modelBuilder.Entity<RoomAmenities>().HasData(new RoomAmenities { Id = 1, AmenitiesID = 1, RoomID = 1 });
+            modelBuilder.Entity<RoomAmenities>().HasData(new RoomAmenities { Id = 2, AmenitiesID = 2, RoomID = 2 });
+            modelBuilder.Entity<RoomAmenities>().HasData(new RoomAmenities { Id = 3, AmenitiesID = 3, RoomID = 3 });
         }
     }
 }
