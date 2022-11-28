@@ -1,0 +1,17 @@
+﻿@model AsyncInnReWrite.Models.DTO.LoginDTO
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<form>
+    @Html.DisplayNameFor(model => model.UserName)
+    @Html.TextBoxFor(model => model.UserName)
+
+    @Html.DisplayNameFor(model => model.Password)
+    @Html.PasswordFor(model => model.Password)
+    @*<input id="usrnm" type="email"/>
+    <input id="pswd" type="password"/>*@
+    <button type="submit">Login</button>
+</form>

@@ -1,4 +1,4 @@
-﻿@model AsyncInnReWrite.Models.Amenity
+﻿@model AsyncInnReWrite.Models.DTO.AmenityDTO
 
 @{
     ViewData["Title"] = "Details";
@@ -16,9 +16,21 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RoomAmenities.FirstOrDefault().RoomID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RoomAmenities.FirstOrDefault().RoomID)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RoomAmenities.FirstOrDefault().Room.Layout)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RoomAmenities.FirstOrDefault().Room.Layout)
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.Name">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

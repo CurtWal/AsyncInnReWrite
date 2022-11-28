@@ -13,7 +13,7 @@ namespace AsyncInnReWrite.Models
         public string Country { get; set;}
         public string PhoneNum { get; set;}
 
-        public ICollection<HotelRoom> HotelRoom { get; set;}
+        public ICollection<HotelRooom> HotelRoom { get; set;}
 
     }
 }

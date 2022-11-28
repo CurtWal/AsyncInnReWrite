@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AsyncInnReWrite.Models.Room>
+﻿@model IEnumerable<AsyncInnReWrite.Models.DTO.UserDTO>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,12 +13,8 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Username)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Layout)
-            </th>
-            
             <th></th>
         </tr>
     </thead>
@@ -26,12 +22,8 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Username)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Layout)
-            </td>
-            
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

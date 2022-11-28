@@ -5,92 +5,109 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AsyncInnReWrite.Models;
-using Hotel.Data;
 using AsyncInnReWrite.Models.DTO;
-using AsyncInnReWrite.Models.Interface;
+using Hotel.Data;
+using AsyncInnReWrite.Models;
 
 namespace AsyncInnReWrite.Controllers.Web
 {
-    public class AmenitiesController : Controller
+    public class UserDTOesController : Controller
     {
         private readonly HotelDbContext _context;
 
-        public AmenitiesController(HotelDbContext context)
+        public UserDTOesController(HotelDbContext context)
         {
             _context = context;
         }
+        public ViewResult Register()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Register(RegisterUserDTO newUser)
+        {
+            return RedirectToRoute("api/UsersDTOes/Register", newUser);
+        }
+        public ViewResult Login()
+        {
+            return View();
+        }
 
-        // GET: Amenities
+        [HttpPost]
+        public ActionResult Login(LoginDTO rUser)
+        {
+            return RedirectToRoute("api/UserDTOes/Login", rUser);
+        }
+        // GET: UserDTOes
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Amenities.ToListAsync());
+              return View(await _context.UserDTO.ToListAsync());
         }
 
-        // GET: Amenities/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: UserDTOes/Details/5
+        public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.Amenities == null)
+            if (id == null || _context.UserDTO == null)
             {
                 return NotFound();
             }
 
-            var amenity = await _context.Amenities.Include(r => r.RoomAmenities).ThenInclude(ra => ra.Room)
+            var userDTO = await _context.UserDTO
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (amenity == null)
+            if (userDTO == null)
             {
                 return NotFound();
             }
-            AmenityDTO roomAmen = new AmenityDTO() { Name = amenity.Name, RoomAmenities = amenity.RoomAmenities };
-            return View(roomAmen);
+
+            return View(userDTO);
         }
 
-        // GET: Amenities/Create
+        // GET: UserDTOes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Amenities/Create
+        // POST: UserDTOes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Amenity amenity)
+        public async Task<IActionResult> Create([Bind("Id,Username")] UserDTO userDTO)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(amenity);
+                _context.Add(userDTO);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(amenity);
+            return View(userDTO);
         }
 
-        // GET: Amenities/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: UserDTOes/Edit/5
+        public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.Amenities == null)
+            if (id == null || _context.UserDTO == null)
             {
                 return NotFound();
             }
 
-            var amenity = await _context.Amenities.FindAsync(id);
-            if (amenity == null)
+            var userDTO = await _context.UserDTO.FindAsync(id);
+            if (userDTO == null)
             {
                 return NotFound();
             }
-            return View(amenity);
+            return View(userDTO);
         }
 
-        // POST: Amenities/Edit/5
+        // POST: UserDTOes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Amenity amenity)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Username")] UserDTO userDTO)
         {
-            if (id != amenity.Id)
+            if (id != userDTO.Id)
             {
                 return NotFound();
             }
@@ -99,12 +116,12 @@ namespace AsyncInnReWrite.Controllers.Web
             {
                 try
                 {
-                    _context.Update(amenity);
+                    _context.Update(userDTO);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AmenityExists(amenity.Id))
+                    if (!UserDTOExists(userDTO.Id))
                     {
                         return NotFound();
                     }
@@ -115,49 +132,49 @@ namespace AsyncInnReWrite.Controllers.Web
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(amenity);
+            return View(userDTO);
         }
 
-        // GET: Amenities/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: UserDTOes/Delete/5
+        public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.Amenities == null)
+            if (id == null || _context.UserDTO == null)
             {
                 return NotFound();
             }
 
-            var amenity = await _context.Amenities
+            var userDTO = await _context.UserDTO
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (amenity == null)
+            if (userDTO == null)
             {
                 return NotFound();
             }
 
-            return View(amenity);
+            return View(userDTO);
         }
 
-        // POST: Amenities/Delete/5
+        // POST: UserDTOes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.Amenities == null)
+            if (_context.UserDTO == null)
             {
-                return Problem("Entity set 'HotelDbContext.Amenities'  is null.");
+                return Problem("Entity set 'HotelDbContext.UserDTO'  is null.");
             }
-            var amenity = await _context.Amenities.FindAsync(id);
-            if (amenity != null)
+            var userDTO = await _context.UserDTO.FindAsync(id);
+            if (userDTO != null)
             {
-                _context.Amenities.Remove(amenity);
+                _context.UserDTO.Remove(userDTO);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AmenityExists(int id)
+        private bool UserDTOExists(string id)
         {
-          return _context.Amenities.Any(e => e.Id == id);
+          return _context.UserDTO.Any(e => e.Id == id);
         }
     }
 }

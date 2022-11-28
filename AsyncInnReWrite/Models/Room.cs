@@ -8,6 +8,7 @@ namespace AsyncInnReWrite.Models
         public string Name { get; set; }
         public string Layout { get; set; }
 
-        public ICollection<Amenity> Amenities { get; set; }
+
+        public ICollection<RoomAmenities> RoomAmenities { get; set; }
     }
 }

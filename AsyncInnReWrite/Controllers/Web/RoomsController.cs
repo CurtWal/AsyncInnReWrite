@@ -24,8 +24,9 @@ namespace AsyncInnReWrite.Controllers.Web
         public async Task<IActionResult> Index()
         {
             //return View(await _context.Rooms.ToListAsync());
-            return View(await _context.Rooms.Include(r => r.Amenities).ThenInclude(s => s.roomAmenities).ToListAsync());
-            
+            return View(await _context.Rooms.Include(r => r.RoomAmenities).ThenInclude(ra => ra.Amenities).ToListAsync());
+            //return View(await _context.Rooms.Include(r => r.Amenities).ThenInclude(s => s.roomAmenities).ToListAsync());
+
         }
 
         // GET: Rooms/Details/5
@@ -36,18 +37,14 @@ namespace AsyncInnReWrite.Controllers.Web
                 return NotFound();
             }
 
-            var room = await _context.Rooms.Include(r => r.Amenities)
+            var room = await _context.Rooms.Include(r => r.RoomAmenities).ThenInclude(ra => ra.Amenities)
                 .FirstOrDefaultAsync(m => m.Id == id);
-
             if (room == null)
             {
                 return NotFound();
             }
-
-            RoomDTO roomDTO = new RoomDTO() {
-            AmenityNRoom = "Names",
-            Amenity = room.Amenities.First() };
-            return View(roomDTO);
+            RoomDTO roomAmen = new RoomDTO() { Name = room.Name, Layout = room.Layout, RoomAmenities = room.RoomAmenities};
+            return View(roomAmen);
         }
 
         // GET: Rooms/Create

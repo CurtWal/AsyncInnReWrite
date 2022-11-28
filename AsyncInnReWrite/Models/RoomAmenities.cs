@@ -5,10 +5,11 @@ namespace AsyncInnReWrite.Models
     public class RoomAmenities
     {
         public int Id { get; set; }
-        public int AmenitiesID { get; set; }
-        public int RoomID {get; set;}
         [ForeignKey("Amenity")]
-        public ICollection<Amenity> Amenities { get; set; }
+        public int AmenitiesID { get; set; }
+        [ForeignKey("Room")]
+        public int RoomID {get; set;}
+        public Amenity Amenities { get; set; }
         public Room Room { get; set; }
     }
 }

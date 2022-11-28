@@ -2,7 +2,7 @@
 
 namespace AsyncInnReWrite.Models
 {
-    public class HotelRoom
+    public class HotelRooom
     {
         public int Id { get; set; }
         public int RoomNumber { get; set; }
